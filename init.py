@@ -2,15 +2,17 @@ import logging
 import uuid
 
 from flask import Flask, g, request
+from prometheus_client import make_wsgi_app
+from prometheus_client.core import REGISTRY
 
 from route.debug import debug_bp
 from route.oss import oss_bp
 from route.welcome import welcome_bp
-
+from route.monitor import monitor_bp
 
 def create_app():
     app = Flask(__name__)
-
+    #app.wsgi_app=make_wsgi_app(REGISTRY)
     # 载入配置
     app.config.from_pyfile('./config.py')
 
@@ -18,6 +20,7 @@ def create_app():
     with app.app_context():
         # 注册路由
         app.register_blueprint(welcome_bp)
+        app.register_blueprint(monitor_bp)
         app.register_blueprint(oss_bp)
         app.register_blueprint(debug_bp)
 
