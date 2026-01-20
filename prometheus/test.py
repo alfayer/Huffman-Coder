@@ -34,7 +34,8 @@ if __name__ == "__main__":
     test_instance.simulate_metrics()
 
 def run_metrics_server():
-    print("Starting Prometheus metrics server on http://localhost:9000")
-    start_http_server(9000)
+    port=3000
+    print("Starting Prometheus metrics server on http://localhost:%d" % port)
+    start_http_server(3000)
     test_instance = test()
     test_instance.simulate_metrics()

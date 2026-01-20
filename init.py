@@ -10,6 +10,7 @@ from route.oss import oss_bp
 from route.welcome import welcome_bp
 from route.monitor import monitor_bp
 
+
 def create_app():
     app = Flask(__name__)
     #app.wsgi_app=make_wsgi_app(REGISTRY)
@@ -34,5 +35,7 @@ def create_app():
         # 移除request-id
         g.request_id = ''
         return response
+    
+
 
     return app
