@@ -13,5 +13,6 @@ int main(){
     Huffman hfm(s);
     hfm.printTree();
     hfm.printCodes();
+    hfm.compress(s);
     return 0;
 }

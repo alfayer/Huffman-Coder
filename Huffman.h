@@ -1,5 +1,6 @@
 #ifndef HUFFMAN
 #define HUFFMAN
+#define OUTPUT_FILE "output.txt"
 #include <string>
 #include<iostream>
 #include<unordered_map>
@@ -7,6 +8,8 @@
 #include<algorithm>
 #include<queue>
 #include<bitset>
+#include<fstream>
+#include<cstdint>
 using std::pair;
 using std::string;
 using std::unordered_map;
@@ -31,10 +34,13 @@ class Huffman{
         void printHuffmanTree(Node* node, int depth = 0);
         void generateCodes(Node* node, string code);
         void destroyTree(Node* node);
-    public:
         unordered_map<char, string> codeMap;
+        unordered_map<int,char> reverseMap;
+        string encode(string s);
+    public:
         Huffman(string s);
-        string decodeHuff();
+        string decompress(string filePath);
+        void compress(string s);
         void getHuffmanCode();
         void printTree();
         void printCodes();

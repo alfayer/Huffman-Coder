@@ -76,6 +76,7 @@ void Huffman::generateCodes(Node* node, string code) {
     // 叶子节点
     if (!node->left && !node->right) {
         codeMap[node->c] = code;
+        reverseMap[node->frqcy]=node->c;
         return;
     }
     
@@ -131,8 +132,55 @@ void Huffman::printCodes() {
         }
     }
 }
-
-string Huffman::decodeHuff() {
+//todo: decompress waiting for implementation
+string Huffman::decompress(string filePath) {
     // 需要实现解码逻辑
+    std::ifstream inFile(filePath, std::ios::binary);
+    if (!inFile) {
+        std::cerr << "Failed to open file for decompression: " << filePath << std::endl;
+        return "";
+    }
+    char c;
+    uint8_t currentyByte=0;
+    while(inFile.get(c)){
+        currentyByte=(c & 0x8F)
+    }
     return "";
+}
+void Huffman::compress(string s) {
+    // 需要实现压缩逻辑
+    string encodedStr=encode(s);
+    vector<uint8_t> compressedData;
+    uint8_t currentByte=0;
+    int bitCount=0;
+    for(char c:encodedStr){
+        
+        currentByte=(currentByte<<1)|(c-'0');
+        bitCount++;
+        if(bitCount==8){
+            compressedData.push_back(currentByte);
+            bitCount=0;
+            currentByte=0;
+        }
+    }
+    // 处理最后一个不完整的字节
+    if (bitCount > 0) {
+        currentByte <<= (8 - bitCount);
+        compressedData.push_back(currentByte);
+    }
+
+    std::ofstream outFile(OUTPUT_FILE, std::ios::binary|std::ios::app);
+    for(uint8_t byte:compressedData){
+        outFile.put(byte);
+    }
+    outFile.close();
+}
+string Huffman::encode(string s){
+    string encodedStr;
+    for (char c : s) {
+        encodedStr += codeMap[c];
+        //std::cout<<c<<" "<<codeMap[c]<<std::endl;
+    }
+    std::cout<<encodedStr<<std::endl;
+    return encodedStr;
 }
