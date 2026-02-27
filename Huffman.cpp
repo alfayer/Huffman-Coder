@@ -1,60 +1,151 @@
 #include "Huffman.h"
+#include <memory>
 
-// 定义比较函数，用于priority_queue
-struct Compare
-{
-    bool operator()(const pair<char, int> &a, const pair<char, int> &b)
-    {
-        return a.second > b.second; // 小顶堆
+// 比较器：比较 Node 指针
+struct CompareNodePtr {
+    bool operator()(const Node* a, const Node* b) const {
+        return a->frqcy > b->frqcy;  // 小顶堆
     }
 };
 
-Huffman::Huffman(string s)
-{
+Huffman::Huffman(string s) {
     generateHufTree(s);
+    getHuffmanCode();
 }
 
-Huffman::~Huffman()
-{
+Huffman::~Huffman() {
+    // 需要递归删除所有节点
+    destroyTree(huffmanNode);
 }
 
-void Huffman::generateHufTree(string s)
-{
-    unordered_map<char, int> map;
-    for (int i = 0, totalLen = s.size(); i < totalLen; i++)
-    {
-        map[s[i]] += 1;
+void Huffman::destroyTree(Node* node) {
+    if (!node) return;
+    destroyTree(node->left);
+    destroyTree(node->right);
+    delete node;
+}
+
+void Huffman::generateHufTree(string s) {
+    // 统计频率
+    unordered_map<char, int> freqMap;
+    for (char c : s) {
+        freqMap[c]++;
     }
-
-    // 直接使用priority_queue，避免vector和sort
-    priority_queue<pair<char, int>, vector<pair<char, int>>, Compare> q;
-
-    // 将unordered_map中的元素直接插入priority_queue
-    for (const auto &entry : map)
-    {
-        q.push(entry);
+    
+    // 优先队列存储 Node*
+    priority_queue<Node*, vector<Node*>, CompareNodePtr> pq;
+    
+    // 创建叶子节点
+    for (const auto& entry : freqMap) {
+        pq.push(new Node(entry.first, entry.second));
     }
-
-    Node *left, *right, *root;
-    while (q.size() > 1)
-    {
-        left = new Node(q.top().first, q.top().second);
-        q.pop();
-        right = new Node(q.top().first, q.top().second);
-        q.pop();
-        root = new Node(0, 0);
-        root->frqcy = left->frqcy + right->frqcy;
-        root->left = left;
-        root->right = right;
-        q.push(pair<char, int>(root->c, root->frqcy));
+    
+    // 特殊情况：只有一个字符
+    if (pq.size() == 1) {
+        Node* single = pq.top();
+        huffmanNode = new Node('\0', single->frqcy);
+        huffmanNode->left = single;
+        huffmanNode->right = nullptr;
+        return;
     }
-    huffmanNode = new Node(q.top().first, q.top().second);
+    
+    // 构建哈夫曼树
+    while (pq.size() > 1) {
+        Node* left = pq.top(); pq.pop();
+        Node* right = pq.top(); pq.pop();
+        
+        Node* parent = new Node('\0', left->frqcy + right->frqcy);
+        parent->left = left;
+        parent->right = right;
+        
+        pq.push(parent);
+    }
+    
+    // 根节点
+    huffmanNode = pq.top();
 }
-string Huffman::decodeHuff()
-{
 
+void Huffman::getHuffmanCode() {
+    codeMap.clear();
+    generateCodes(huffmanNode, "");
 }
-unordered_map<char, string> Huffman::getHuffmanCode()
-{
 
+void Huffman::generateCodes(Node* node, string code) {
+    if (!node) return;
+    
+    // 叶子节点
+    if (!node->left && !node->right) {
+        codeMap[node->c] = code;
+        return;
+    }
+    
+    // 递归
+    generateCodes(node->left, code + '0');
+    generateCodes(node->right, code + '1');
+}
+
+// 修正 preFS 函数（你的版本逻辑完全错误）
+void Huffman::preFS(Node* node, string code) {
+    if (!node) return;
+    
+    if (!node->left && !node->right) {
+        // 叶子节点：存储编码
+        codeMap[node->c] = code;
+    } else {
+        // 内部节点：继续递归
+        preFS(node->left, code + '0');
+        preFS(node->right, code + '1');
+    }
+}
+
+void Huffman::printHuffmanTree(Node* node, int depth) {
+    if (!node) return;
+    
+    // 先打印右子树
+    printHuffmanTree(node->right, depth + 1);
+    
+    // 打印当前节点
+    std::cout << std::string(depth * 4, ' ');
+    if (!node->left && !node->right) {
+        // 叶子节点
+        if (node->c == ' ') {
+            std::cout << "' ':" << node->frqcy;
+        } else if (node->c == '\0') {
+            std::cout << "●:" << node->frqcy;
+        } else {
+            std::cout << "'" << node->c << "':" << node->frqcy;
+        }
+    } else {
+        // 内部节点
+        std::cout << "●:" << node->frqcy;
+    }
+    std::cout << std::endl;
+    
+    // 打印左子树
+    printHuffmanTree(node->left, depth + 1);
+}
+
+void Huffman::printTree() {
+    std::cout << "\nHuffman Tree Structure:\n";
+    std::cout << "=======================\n";
+    printHuffmanTree(huffmanNode, 0);
+}
+
+void Huffman::printCodes() {
+    std::cout << "\nHuffman Codes:\n";
+    std::cout << "==============\n";
+    for (const auto& pair : codeMap) {
+        if (pair.first == '\0') {
+            std::cout << "space: " << pair.second << "\n";
+        } else if (pair.first == '\0') {
+            std::cout << "NULL: " << pair.second << "\n";
+        } else {
+            std::cout << "'" << pair.first << "': " << pair.second << "\n";
+        }
+    }
+}
+
+string Huffman::decodeHuff() {
+    // 需要实现解码逻辑
+    return "";
 }

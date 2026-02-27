@@ -28,10 +28,18 @@ class Huffman{
     private:
         Node* huffmanNode;
         void generateHufTree(string s);
+        void preFS(Node* node, string code);
+        void printHuffmanTree(Node* node, int depth = 0);
+        void generateCodes(Node* node, string code);
+        void destroyTree(Node* node);
     public:
+        unordered_map<char, string> codeMap;
         Huffman(string s);
         string decodeHuff();
-        unordered_map<char,string> getHuffmanCode();
+        void getHuffmanCode();
+        void printTree();
+        void printCodes();
+        unordered_map<char, string> getMap(){return codeMap;}
         ~Huffman();
 };
 #endif
