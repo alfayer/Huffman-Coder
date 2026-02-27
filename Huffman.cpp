@@ -98,13 +98,13 @@ void Huffman::printHuffmanTree(Node* node, int depth) {
         if (node->c == ' ') {
             std::cout << "' ':" << node->frqcy;
         } else if (node->c == '\0') {
-            std::cout << "●:" << node->frqcy;
+            std::cout << "*:" << node->frqcy;
         } else {
             std::cout << "'" << node->c << "':" << node->frqcy;
         }
     } else {
         // 内部节点
-        std::cout << "●:" << node->frqcy;
+        std::cout << "*:" << node->frqcy;
     }
     std::cout << std::endl;
     
