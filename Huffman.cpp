@@ -84,19 +84,6 @@ void Huffman::generateCodes(Node* node, string code) {
     generateCodes(node->right, code + '1');
 }
 
-// 修正 preFS 函数（你的版本逻辑完全错误）
-void Huffman::preFS(Node* node, string code) {
-    if (!node) return;
-    
-    if (!node->left && !node->right) {
-        // 叶子节点：存储编码
-        codeMap[node->c] = code;
-    } else {
-        // 内部节点：继续递归
-        preFS(node->left, code + '0');
-        preFS(node->right, code + '1');
-    }
-}
 
 void Huffman::printHuffmanTree(Node* node, int depth) {
     if (!node) return;

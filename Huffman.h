@@ -28,7 +28,6 @@ class Huffman{
     private:
         Node* huffmanNode;
         void generateHufTree(string s);
-        void preFS(Node* node, string code);
         void printHuffmanTree(Node* node, int depth = 0);
         void generateCodes(Node* node, string code);
         void destroyTree(Node* node);
