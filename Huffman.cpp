@@ -7,24 +7,20 @@ struct CompareNodePtr {
         return a->frqcy > b->frqcy;  // 小顶堆
     }
 };
-
 Huffman::Huffman(string s) {
     generateHufTree(s);
     getHuffmanCode();
 }
-
 Huffman::~Huffman() {
     // 需要递归删除所有节点
     destroyTree(huffmanNode);
 }
-
 void Huffman::destroyTree(Node* node) {
     if (!node) return;
     destroyTree(node->left);
     destroyTree(node->right);
     delete node;
 }
-
 void Huffman::generateHufTree(string s) {
     // 统计频率
     unordered_map<char, int> freqMap;
@@ -64,12 +60,10 @@ void Huffman::generateHufTree(string s) {
     // 根节点
     huffmanNode = pq.top();
 }
-
 void Huffman::getHuffmanCode() {
     codeMap.clear();
     generateCodes(huffmanNode, "");
 }
-
 void Huffman::generateCodes(Node* node, string code) {
     if (!node) return;
     
@@ -84,8 +78,6 @@ void Huffman::generateCodes(Node* node, string code) {
     generateCodes(node->left, code + '0');
     generateCodes(node->right, code + '1');
 }
-
-
 void Huffman::printHuffmanTree(Node* node, int depth) {
     if (!node) return;
     
@@ -112,13 +104,11 @@ void Huffman::printHuffmanTree(Node* node, int depth) {
     // 打印左子树
     printHuffmanTree(node->left, depth + 1);
 }
-
 void Huffman::printTree() {
     std::cout << "\nHuffman Tree Structure:\n";
     std::cout << "=======================\n";
     printHuffmanTree(huffmanNode, 0);
 }
-
 void Huffman::printCodes() {
     std::cout << "\nHuffman Codes:\n";
     std::cout << "==============\n";
@@ -132,6 +122,7 @@ void Huffman::printCodes() {
         }
     }
 }
+
 //todo: decompress waiting for implementation
 string Huffman::decompress(string filePath) {
     // 需要实现解码逻辑
@@ -143,7 +134,8 @@ string Huffman::decompress(string filePath) {
     char c;
     uint8_t currentyByte=0;
     while(inFile.get(c)){
-        currentyByte=(c & 0x8F)
+        currentyByte=(c & 0x8F);
+        std::cout<<int(currentyByte)<<std::endl;
     }
     return "";
 }

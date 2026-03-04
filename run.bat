@@ -30,6 +30,15 @@ if errorlevel 1 (
     echo Huffman.cpp compile success
 )
 
+echo compile GetBook.cpp...
+g++ -c GetBook.cpp -o build\obj\GetBook.o -g -Wall
+if errorlevel 1 (
+    echo GetBook.cpp compile failed
+    exit /b 1
+) else (
+    echo GetBook.cpp compile success
+)
+
 echo link...
 g++ -o build\bin\program.exe build\obj\main.o build\obj\Huffman.o
 if errorlevel 1 (
